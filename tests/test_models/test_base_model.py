@@ -1,62 +1,59 @@
 #!/usr/bin/python3
+"""
+Unit tests for base_model.py
+"""
 import unittest
-import pep8
-import json
-import os
-from datetime import datetime
 from models.base_model import BaseModel
-
-
-class TestBaseModelDocs(unittest.TestCase):
-    """ check for documentation """
-    def test_class_doc(self):
-        """ check for class documentation """
-        self.assertTrue(len(BaseModel.__doc__) > 0)
-
-    def test_method_docs(self):
-        """ check for method documentation """
-        for func in dir(BaseModel):
-            self.assertTrue(len(func.__doc__) > 0)
-
-
-class TestBaseModelPep8(unittest.TestCase):
-    """ check for pep8 validation """
-    def test_pep8(self):
-        """ test base and test_base for pep8 conformance """
-        style = pep8.StyleGuide(quiet=True)
-        file1 = 'models/base_model.py'
-        file2 = 'tests/test_models/test_base_model.py'
-        result = style.check_files([file1, file2])
-        self.assertEqual(result.total_errors, 0,
-                         "Found code style errors (and warning).")
+import datetime
+import pep8
 
 
 class TestBaseModel(unittest.TestCase):
-    """ tests for class BaseModel """
-    @classmethod
-    def setUpClass(cls):
-        """ set up instances for all tests """
-        cls.basemodel = BaseModel()
+    """
+    Test for BaseModel
+    """
+    def setUp(self):
+        """Set up instances"""
+        self.basemodel = BaseModel()
 
-    def test_id(self):
-        """ test id """
-        self.assertEqual(str, type(self.basemodel.id))
+    def test_pep8_BaseModel(self):
+        """Testing for pep8"""
+        style = pep8.StyleGuide(quiet=True)
+        p = style.check_files(['models/base_model.py'])
+        self.assertEqual(p.total_errors, 0, "fix pep8")
 
-    def test_created_at(self):
-        """ test created_at """
-        self.assertEqual(datetime, type(self.basemodel.created_at))
-
-    def test_updated_at(self):
-        """ test updated_at """
-        self.assertEqual(datetime, type(self.basemodel.updated_at))
+    def testattr(self):
+        """Test the attributes of BaseModel"""
+        self.assertTrue(hasattr(self.basemodel, "created_at"))
+        self.assertTrue(hasattr(self.basemodel, "id"))
+        self.assertTrue(hasattr(self.basemodel, "updated_at"))
+        self.assertFalse(hasattr(self.basemodel, "random_attr"))
+        self.assertFalse(hasattr(self.basemodel, "name"))
+        self.basemodel.name = "Betty"
+        self.basemodel.age = 89
+        self.assertTrue(hasattr(self.basemodel, "name"))
+        self.assertEqual(self.basemodel.name, "Betty")
+        self.assertTrue(hasattr(self.basemodel, "age"))
+        delattr(self.basemodel, "name")
+        self.assertFalse(hasattr(self.basemodel, "name"))
+        self.assertEqual(self.basemodel.__class__.__name__, "BaseModel")
 
     def test_to_dict(self):
-        """ test to_dict method """
-        new_dict = self.basemodel.to_dict()
-        self.assertEqual(type(new_dict), dict)
-        self.assertTrue('to_dict' in dir(self.basemodel))
+        """Test conversion of object attributes to dictionary for json"""
+        my_model = BaseModel()
+        my_model.name = "Holberton"
+        my_model.my_number = 89
+        d = my_model.to_dict()
+        expected_attrs = ["id",
+                          "created_at",
+                          "updated_at",
+                          "name",
+                          "my_number",
+                          "__class__"]
+        self.assertCountEqual(d.keys(), expected_attrs)
+        self.assertEqual(d['__class__'], 'BaseModel')
+        self.assertEqual(d['name'], "Holberton")
+        self.assertEqual(d['my_number'], 89)
 
-    @classmethod
-    def tearDownClass(cls):
-        """ remove test instances """
-        pass
+if __name__ == "__main__":
+    unittest.main()
