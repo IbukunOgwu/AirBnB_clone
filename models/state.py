@@ -1,13 +1,18 @@
 #!/usr/bin/python3
-""" module for State class """
+"""
+Class State, inherits from BaseModel
+"""
 from models.base_model import BaseModel
 
 
 class State(BaseModel):
     """
-    initiation of State that inherits from BaseModel class
-
-    Public Class Attributes:
-       (string) name: initialized as empty string
+    Class attribute
     """
     name = ""
+
+    def __init__(self, *args, **kwargs):
+        """
+        Class State init
+        """
+        super().__init__(*args, **kwargs)
