@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """Defines unittests for models/place.py.
+
 Unittest classes:
     TestPlace_instantiation
     TestPlace_save
@@ -194,7 +195,7 @@ class TestPlace_save(unittest.TestCase):
             self.assertIn(plid, f.read())
 
 
-lass TestPlace_to_dict(unittest.TestCase):
+class TestPlace_to_dict(unittest.TestCase):
     """Unittests for testing to_dict method of the Place class."""
 
     def test_to_dict_type(self):
